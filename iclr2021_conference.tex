@@ -21,7 +21,7 @@
 \newacronym{MSE}{MSE}{mean squared error}
 \newacronym{RMSE}{RMSE}{root mean squared error}
 \newacronym{MAE}{MAE}{mean absolute error}
-\newacronym{R2}{R2}{coefficient of determination}
+\newacronym{R2}{$R^2$}{coefficient of determination}
 \newacronym{LC1}{LC1}{Load Curve 1}
 \newacronym{LC2}{LC2}{Load Curve 2}
 \newacronym{LC3}{LC3}{Load Curve 3}
@@ -72,12 +72,12 @@ Magdeburg, Germany \\
 \section{Introduction}
 In the evolving landscape of industrial operations, the precise prediction of load demands has become a cornerstone for optimizing energy efficiency and operational planning \cite{semmelmann2022load}. This project stems from a collaborative effort with an industrial partner, who provided us with comprehensive load data. The overarching goal is to predict load demands with high accuracy, integrating additional variables that influence these demands, including holiday periods and external factors such as temperature and radiation levels. Central to our investigation is the application of \gls{xgboost}, a decision-tree-based ensemble Machine Learning algorithm that has demonstrated exceptional performance in various predictive modeling challenges \cite{chen2015xgboost}. 
 
-\Gls{xgboost} stands out for its ability to handle a wide range of data types, its flexibility in accommodating different types of predictive modeling problems, and its efficiency in both computation and memory usage \cite{budholiya2022optimized}. To showcase the superior performance of XGBoost in predicting load demands, we also trained models using \gls{ARD}, \gls{KNN} and \gls{LSTM} networks \cite{hochreiter1997long} as comparative benchmarks. These models were selected due to their diverse approaches to prediction, ranging from Bayesian inference in \gls{ARD} \cite{qi2004predictive}, similarity-based prediction in \gls{KNN} \cite{cover1967nearest}, to the ability of \gls{LSTM} networks to capture long-term dependencies in sequential data. 
+\Gls{xgboost} stands out for its ability to handle a wide range of data types, its flexibility in accommodating different types of predictive modeling problems, and its efficiency in both computation and memory usage \cite{budholiya2022optimized}. To showcase the superior performance of \Gls{xgboost} in predicting load demands, we also trained models using \gls{ARD}, \gls{KNN} and \gls{LSTM} networks as comparative benchmarks. These models were selected due to their diverse approaches to prediction, ranging from Bayesian inference in \gls{ARD} \cite{qi2004predictive}, similarity-based prediction in \gls{KNN} \cite{cover1967nearest}, to the ability of \gls{LSTM} networks to capture long-term dependencies in sequential data \cite{hochreiter1997long}. 
 
 The empirical results underscore XGBoost's robustness and accuracy in forecasting load demands under varying conditions, significantly outperforming the benchmark models. This outcome not only highlights the effectiveness of XGBoost in handling the complexity and variability of load data but also underscores its potential as a tool for enhancing energy management strategies in industrial settings. Our study contributes to the growing body of knowledge on predictive modeling in industrial applications, offering insights that could facilitate more informed decision-making and efficiency improvements. 
 
 \subsection{Aim of this work}
-The primary aim of this study is to enhance the accuracy of daily electric load forecasting through a comprehensive \gls{EDA} and an extensive feature engineering process. By analyzing historical load data alongside relevant environmental variables, we aim to identify and incorporate significant predictors that enhance the forecasting performance of our models.
+The primary aim of this study is to enhance the accuracy of daily electric load forecasting through a comprehensive \gls*{EDA} and an extensive feature engineering process. By analyzing historical load data alongside relevant environmental variables, we aim to identify and incorporate significant predictors that enhance the forecasting performance of our models.
 
 In the broader context of energy management and load forecasting, the goals of this study are to:
 
@@ -91,23 +91,19 @@ These objectives are pivotal as they directly address the need for sophisticated
 
 
 \subsection{Structure of the paper}
- TBD.
-
-
+The structure of this paper is carefully designed to guide readers through the multi-faceted exploration of machine learning models for load forecasting. After the introduction, Section 2 provides a comprehensive background, detailing each predictive model's theoretical foundations. Moving forward, Section 3 describes the methodology, elaborating on the end-to-end process from data preparation to model evaluation. As the methodology unfolds, Section 4, "Business Insights", distills practical implications from the model's predictions, contextualizing them within a business framework and highlighting the potential for operational optimization. Transitioning seamlessly, Section 5, "Results", presents an empirical evaluation of each model, scrutinizing their performance and delineating the comparative analysis. This rigorous assessment culminates in the identification of the most promising model based on the predefined criteria of accuracy, reliability, and efficiency.
+In Section 6, "Conclusion", the synthesis of findings draws conclusions from the research and proposes avenues for future work to enhance the predictive prowess of the models discussed. Finally, an "Acknowledgments" section follows, expressing gratitude to Siemens AG for their support and collaboration, pivotal to the empirical aspects of this research.
 
 \section{Background}
-
 \subsection{Model introduction}
 \subsubsection{XGBoost}     
 \gls{xgboost} is an advanced implementation of gradient boosting algorithms, designed for speed and performance. 
-XGBoost operates by sequentially adding predictors to an ensemble, each one correcting its predecessor. This process is guided by the gradient of the loss function, which measures the difference between the predicted and actual outcomes. The algorithm uses a specialized form of gradient boosting that includes a regularization term to prevent overfitting, making it both powerful and efficient for a wide range of datasets and problems\cite{chen2015xgboost}.
-
-One of the key strengths of XGBoost is its flexibility in handling different types of loss functions, including Huber loss, which is particularly useful for regression tasks. Huber loss is chosen for its robustness to outliers, as it combines the advantages of L1 loss (least absolute deviations) and L2 loss (least squares). For errors smaller than a threshold, Huber loss behaves like L2 loss, which is sensitive to small errors but gives a quadratic penalty to them. For errors larger than the threshold, it behaves like L1 loss, which is less sensitive to large errors and provides a linear penalty. This hybrid approach allows XGBoost to minimize the impact of outliers on the model's performance, leading to more accurate and reliable predictions, especially in scenarios where the data contains many outliers or is highly skewed \cite{kulisz2024optimizing}.
+XGBoost operates by sequentially adding predictors to an ensemble, each one correcting its predecessor. This process is guided by the gradient of the loss function, which measures the difference between the predicted and actual outcomes. The algorithm uses a specialized form of gradient boosting that includes a regularization term to prevent overfitting, making it both powerful and efficient for a wide range of datasets and problems  \cite{chen2015xgboost}.
 
 \subsubsection{LSTM}
 \Gls{LSTM} networks are a type of \gls{RNN} capable of learning dependencies across multiple timespans. Unlike standard \glspl{RNN}, which struggle with vanishing and exploding gradients, LSTMs effectively overcome these challenges through the integration of a memory cell and a gate mechanism. This design enables them to process sequential data efficiently, allowing for the effective handling of long-distance relationships within the data \cite{hochreiter1997long}.
 
-The architecture of an \Gls{LSTM} model comprises four interconnected neural network layers, arranged in a chain-like structure. These layers include an input gate, a forget gate, an output gate, and a memory cell.
+The architecture of an \Gls{LSTM} model comprises four interconnected components, arranged in a chain-like structure. These gates include an input gate, a forget gate, an output gate, and a memory cell.
 
 \begin{itemize}
     \item \textbf{Input Gate:} Responsible for updating the cell state by processing new information entering the network. It decides the extent to which new information should be added to the cell state.
@@ -118,7 +114,7 @@ The architecture of an \Gls{LSTM} model comprises four interconnected neural net
 
 
 \subsubsection{KNN}
-The \gls{KNN} algorithm, or k-nearest neighbors, is a non-parametric, instance-based learning methodology widely used in supervised machine learning for both classification and regression tasks. It is characterized by the fundamental principle that similar instances tend to occur in close proximity within the feature space. Unlike many machine learning algorithms, \gls{KNN} does not make a priori assumptions about the distribution of the underlying data, making it particularly suitable for datasets where conventional parametric models may not perform optimally.
+The \gls{KNN} algorithm is a non-parametric, instance-based learning methodology widely used in supervised machine learning for both classification and regression tasks. It is characterized by the fundamental principle that similar instances tend to occur in close proximity within the feature space. Unlike many machine learning algorithms, \gls{KNN} does not make a priori assumptions about the distribution of the underlying data, making it particularly suitable for datasets where conventional parametric models may not perform optimally.
 
 One of the distinctive features of \gls{KNN} is its operation without an explicit training phase, which can lead to reduced training times but may increase the requirements for memory and computational resources during the prediction phase. The algorithm relies on the principle that data points close to each other in the feature space are likely to exhibit similar characteristics. The choice of \(k\), the number of nearest neighbors considered, is crucial for the algorithm's performance. It balances the sensitivity to noise in the data against the computational efficiency and accuracy of the predictions. The optimal value of \(k\) depends on the data; too small a value makes the algorithm sensitive to noise, while too large a value might smooth out the predictions too much, potentially ignoring informative patterns within the data \cite{cover1967nearest}.
 
@@ -128,10 +124,33 @@ The \gls{ARD} model represents a Bayesian approach that significantly enhances r
 
 One of the key advantages of the \gls{ARD} approach is its ability to optimize model performance by concentrating on significant predictors. This focus not only enhances the predictive accuracy but also facilitates a deeper understanding of the underlying processes that generate the data. The \gls{ARD} model's capacity to systematically reduce dimensionality while preserving or enhancing model performance makes it an invaluable tool in the analysis of complex datasets where the identification of critical predictors is essential \cite{qi2004predictive, rudy2021sparse}.
 
-\section{Methodology}
-Our approach encompasses a comprehensive workflow, from code management and data preprocessing to model development, training, feature engineering and evaluation, aimed at constructing models that predict electricity loads with high precision. We prioritize the selection of machine learning models adept at capturing the complex temporal and nonlinear patterns in load data. This is complemented by a strategic \gls{EDA} and training and validation process to ensure model accuracy and generalizability.
 
-In terms of model selection, we explore the capabilities of four distinct models: K-Neighbours, ARD, LSTM, and XGBoost. Each model is selected based on its potential to tackle various facets of the load forecasting challenge, from statistical learning perspectives (K-Neighbours and ARD) to deep learning and ensemble methods (LSTM and XGBoost), which are adept at modeling the temporal and nonlinear relationships in load data. 
+\subsection{Related Work}
+
+Load prediction has garnered significant attention due to its critical role in energy management and grid stability. Accurate load forecasting aids utilities in planning and operating efficiently, yet it poses considerable challenges due to the complex and dynamic nature of power consumption patterns.
+
+\subsubsection{LSTM Models for Load Prediction}
+Long Short-Term Memory (LSTM) networks, a type of recurrent neural network, have shown promise in addressing the temporal dependencies inherent in load data. \cite{simani2023using} explored the efficacy of LSTM for residential load forecasting, demonstrating its capability to accurately predict energy consumption patterns. This study underscores the potential of LSTM models in capturing the stochastic nature of residential power usage, offering insights for demand side management strategies. Furthermore, \cite{semmelmann2022load} introduced a novel approach by combining LSTM with XGBoost in a hybrid model tailored for energy communities. Their research leverages smart meter data to enhance load forecasting accuracy, illustrating the synergistic potential of integrating LSTM with machine learning techniques like XGBoost for more precise predictions. Additionally, \cite{dai2022improving} have made significant advancements by improving the Bi-LSTM model with XGBoost and an attention mechanism. Their combined approach for short-term power load prediction further exemplifies the effectiveness of hybrid models in achieving high accuracy in load forecasting, marking a notable contribution to the field of applied soft computing in energy prediction.
+
+
+
+\subsubsection{XGBoost Models for Load Prediction}
+The \gls{xgboost} algorithm has emerged as a powerful tool for load prediction, offering improvements in accuracy and generalization over traditional methods. \cite{cai2020short} demonstrated the superiority of XGBoost in short-term forecasting of user power load in China, taking into account climatic factors. Their findings indicate the robustness of XGBoost in handling diverse and complex datasets for load forecasting. The study by \citet{ABDALLAH2022101707} presents a comprehensive analysis of electricity load forecasting in Dubai, a city characterized by high variability in electricity consumption due to its unique demographic and climatic conditions. The research employs a variety of machine learning models, including linear regression variants, support vector machines, decision tree models, ensemble models, and neural networks, to predict monthly electricity consumption. The study identifies the number of expat sites, the total number of sites, and population as the most influential variables for electricity consumption. Among the models evaluated, ensemble models, particularly Random Forest, demonstrated superior performance in predicting electricity consumption. This work emphasizes the effectiveness of ensemble models in handling highly fluctuating electricity loads and underscores the importance of selecting relevant features for accurate load forecasting. Additionally, a recent study available from \cite{NIE2022117854} further explores the application of XGBoost for load prediction, showcasing the algorithm's capability to enhance forecasting accuracy through advanced feature engineering and model tuning. This addition to the literature on XGBoost models for load prediction highlights the ongoing advancements in machine learning techniques for energy forecasting with pattern sequence-based matching and XGBoost.
+
+
+
+\subsubsection{Comparison and Contrast}
+While LSTM models excel in capturing long-term dependencies, ARD, KNN and linear models provide a simpler yet effective approach for certain forecasting scenarios. XGBoost, on the other hand, combines the strengths of machine learning with the ability to incorporate multiple features, including climatic factors, into the forecasting model. Each method offers unique advantages, with the choice of model depending on the specific requirements and characteristics of the load data.
+
+\subsubsection{Conclusion}
+The exploration of LSTM, ARD KNN, and XGBoost models in load prediction reflects the diverse approaches within the field. As the demand for more accurate and efficient forecasting methods grows, the integration of advanced machine learning techniques with traditional statistical models presents a promising avenue for future research.
+
+
+
+\section{Methodology}
+Our approach encompasses a comprehensive workflow, from code management and data preprocessing to model development, feature engineering, training and evaluation, aimed at constructing models that predict electricity loads with high precision. We prioritize the selection of machine learning models adept at capturing the complex temporal and nonlinear patterns in load data. This is complemented by a strategic \gls{EDA} and training and validation process to ensure model accuracy and generalizability.
+
+In terms of model selection, we explore the capabilities of four distinct models: KNN, ARD, LSTM, and XGBoost. Each model is selected based on its potential to tackle various facets of the load forecasting challenge, from statistical learning perspectives (KNN and ARD) to deep learning and ensemble methods (LSTM and XGBoost), which are adept at modeling the temporal and nonlinear relationships in load data. 
 
 \subsection{Code Management and Repository Structure}
 In this paragraph, we describe the basic steps we took to create a robust infrastructure for our Python-based project. We begin by establishing a Git repository on GitHub to house our Python codebase. This decision is pivotal for several reasons. Firstly, using Git for version control allows us to track and manage changes in our codebase, ensuring that each modification is documented and reversible. This is crucial in a collaborative project, enabling multiple contributors to work seamlessly on different aspects of the project without overwriting each other's work. Secondly, the choice of GitHub as our hosting platform leverages its robust ecosystem, facilitating easy sharing and collaboration. 
@@ -143,49 +162,6 @@ To maintain a consistent coding style and improve readability, we incorporate Bl
 The repository is structured to be easily installable via pip, and all dependencies are specified in a “requirements.txt” file. This facilitates a smooth setup for anyone looking to run or contribute to our project, ensuring that all necessary libraries are installed without manual oversight. The inclusion of a comprehensive README further synthesizes our repository's setup and usage instructions, reinforcing our commitment to accessibility and user-friendliness. 
 
 
-\subsection{Model Development and Training}
-In the subsequent sections, we detail the program flow underlying our predictive modelling efforts, which is fundamentally divided into two main stages as depicted in Figure \ref{fig.:flowChart}. This flow is designed to optimize our models for precision in electric load forecasting. 
-\begin{figure}[h]
-\begin{center}
-%\framebox[4.0in]{$\;$}
-\includegraphics[width=\textwidth]{ressources/CSOAII.drawio(1).png}
-\end{center}
-\caption{Flow chart of the program execution}
-\label{fig.:flowChart}
-\end{figure}
-
-The initial stage centers around hyperparameter optimization, where Bayesian optimization techniques are applied to fine-tune the model parameters. This process is augmented with cross-validation to ensure that the selected hyperparameters generalize well to unseen data, thereby enhancing the robustness of the models. 
-
-Following the optimization, the best-performing model parameters are utilized to conduct the final training. This definitive step is crucial as it consolidates the insights gained from the optimization process and aligns the model with the intricacies of the dataset. 
-
-The training procedure initiates with the creation of a \gls{WandB} project session. \gls{WandB} serves as an experiment tracking platform, enabling us to systematically log and monitor various metrics and configurations throughout the training process. Each training run is timestamped and recorded, facilitating the comparison of model performances and configurations over time. 
-
-The next step involves reading the dataset from a CSV file and applying a series of preprocessing operations. These operations are designed to prepare the data for training, encompassing data cleaning, feature engineering, and splitting into training, validation, and test sets. The preprocessing parameters are dynamically adjusted based on the configuration, providing the flexibility to explore various preprocessing strategies and assess their impact on model performance. Detailed descriptions of the feature generation process, including the specific strategies and techniques employed, are provided in Section \ref{subCha.:FeatureGeneration}, "Feature Generation". This section delves into the intricacies of how features are engineered and parameterized, illustrating our methodical approach to enhancing the predictive capabilities of our models. 
-
-The core of our hyperparameter tuning process employs \gls{CV}, a technique that ensures the robustness and generalizability of our models. The \gls{CV} process iterates over a predefined grid of hyperparameters, assessing each combination's performance to pinpoint the most effective configuration. Upon concluding the \gls{CV} phase, we aggregate and log the performance metrics of each fold in \gls{WandB}, providing a granular view of the model's performance across different subsets of the data. This detailed logging aids in understanding the model's consistency and the reliability of its predictive accuracy. 
-
-Hyperparameters and data preprocessing parameters are loaded from either a YAML configuration file or a \gls{WandB} sweep configuration, depending on their role in the training process. Static parameters, which remain unchanged across experiments, are specified in the YAML file. This ensures a stable base for each model training session, providing consistency and traceability for fundamental aspects of the model and preprocessing setup. Conversely, parameters subject to optimization are defined within the \gls{WandB} sweep configuration. This delineation allows for dynamic adjustment and systematic exploration of the hyperparameter space, facilitating the identification of optimal model configurations through automated sweeps. The separation of static and optimizable parameters into YAML and sweep configurations, respectively, enhances the flexibility and efficiency of our experimentation, enabling targeted optimizations that are crucial for advancing the performance of our forecasting models. 
-Following the determination of the best hyperparameters, the model is trained on the combined training and validation datasets. This final training step is crucial for leveraging the full breadth of available data, further refining the model's ability to generalize to unseen data. The training process incorporates callbacks for real-time monitoring and logging in \gls{WandB}, offering insights into the model's learning progression. 
-
-Once the training is complete, the model is saved to a specified path, and a final evaluation is conducted. This evaluation assesses the model's performance on the test dataset, utilizing metrics such as Huber loss, to quantify its predictive accuracy and error characteristics. The evaluation results are critical for understanding the model's practical applicability and forecasting prowess. 
-
-\subsection{Model Specific Characteristics}
-
-In this section, we delve into the specifics of the models employed in our study, each chosen for its unique capabilities in addressing the complexities of load forecasting. 
-
-
-\subsubsection{XGBoost}
-\Gls{xgboost} stands as a sophisticated ensemble learning algorithm renowned for its performance and speed. Our implementation leverages a series of decision trees constructed in a gradient boosting framework. Specific parameters such as "learning\_rate", "max\_depth", and "colsample\_bytree" were fine-tuned to optimize the model's ability to capture complex non-linear patterns within the load forecasting data. The use of regularization parameters, "reg\_alpha" and "reg\_lambda", was instrumental in controlling overfitting, thereby ensuring the model's robustness. Model training included an evaluation phase using a validation set, with the "WandbCallback" ensuring real-time monitoring and logging within \gls{WandB}. 
-
-\subsubsection{ARD}
-The \gls{ARD} Regression model is particularly notable for its capacity to determine the relevance of features within the dataset. By applying a Bayesian framework to linear regression, \gls{ARD} can effectively shrink coefficients for less relevant features to zero, simplifying the model and potentially preventing overfitting. Parameters such as "alpha\_1", "alpha\_2", "lambda\_1", and "lambda\_2" control the shape and scale of the prior distributions over the weights, influencing the model's complexity and adaptability. 
-
-
-\subsubsection{KNN}
-The \gls{KNN} is an instance-based learning model that predicts the target variable's value based on the weighted average of the k-nearest neighbors. It is inherently non-parametric and can capture complex local structures in data. The distance metric, the "leaf\_size", the power parameter for the Minkowski metric and the number of neighbors ("n\_neighbors") were key hyperparameters optimized in our study.  
-
-\subsubsection{LSTM}
-The \gls{LSTM} network is applied to model time-series dependencies in load forecasting. Due to its recurrent nature, it is capable of learning from the long-term temporal sequence of the data, an essential feature given the time-series nature of load curves. Our model employs bidirectional LSTMs to capture patterns across different time scales effectively and is complemented by dropout layers to mitigate overfitting. An exponential decay learning rate schedule is utilized to fine-tune the training process dynamically. 
 
 \subsection{Feature Generation}
 \label{subCha.:FeatureGeneration}
@@ -198,36 +174,62 @@ Understanding these correlations is crucial because it informs our feature gener
 The study spans a training period from January 1, 2012, to May 1, 2015. In this study, we analyse three distinct data sets to develop and refine our load forecasting models, each with varying degrees of complexity and detail. 
 
 The first data set contains electric load data recorded at 15-minute intervals. This high-resolution temporal data provides a granular view of consumption patterns but does not include any environmental factors. The second data set expands upon the first by incorporating environmental variables, specifically two temperature readings and two radiation values. These additional features allow us to explore the impact of weather conditions on electricity demand and enhance the predictive power of our models. The third data set offers a more streamlined set of environmental inputs, including one value each for temperature and radiation. This set allows us to assess the influence of these variables on load forecasting without the additional complexity of multiple readings. 
+The table below summarizes the statistical properties of the three load curves analyzed in this study.
+\begin{table}[ht]
+\centering
+\caption{Statistical Summary of Load Curves}
+\label{tab:lc_statistics}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Statistic & LC1 & LC2 & LC3 \\ \midrule
+Mean & 300.15 & 50.16 & 99.70 \\
+Median & 341.03 & 49.27 & 99.64 \\
+Standard Deviation & 101.97 & 14.46 & 27.67 \\
+Variance & 10397.08 & 209.22 & 765.67 \\
+Minimum & 71.63 & 18.52 & 40.48 \\
+Maximum & 470.21 & 112.2 & 174.27 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The statistical summary reveals distinct differences among the load curves:
+\begin{itemize}
+    \item LC1 exhibits the highest variability, with the largest standard deviation and variance, indicating a wide range of load values.
+    \item LC2 has the lowest mean and median values, reflecting its overall lower load levels compared to LC1 and LC3. It also shows the least variability among the three curves.
+    \item LC3 presents a balance between LC1 and LC2 in terms of mean and median values, with its variability being higher than LC2 but significantly lower than LC1.
+\end{itemize}
+
+These differences highlight the unique characteristics of each load curve, underscoring the importance of tailored approaches for load prediction and analysis.
+
 
 \subsubsection{Temporal Decomposition and Data Streamlining}
 A critical aspect of our feature engineering process involves the temporal decomposition of date-time data. Each record in our datasets comes with both a start and end timestamp, indicating the interval of the electric load measurement. To harness the full potential of this temporal information, we systematically decompose the start date into separate features: year, month, day, hour, and minute. This granular breakdown allows our forecasting models to detect and learn from patterns that may occur cyclically on a yearly, monthly, daily, or hourly basis. 
 Considering the nature of our datasets, where the electric load is recorded in fixed 15-minute intervals, we have made a strategic decision to exclude the end date from our features. The end timestamp does not provide additional information since the interval duration is constant and known. By removing the end date, we streamline our feature set, focusing our models on the more informative start date components, which mark the beginning of each measurement period. This approach not only simplifies the feature space but also ensures computational efficiency. Our models are not burdened with redundant data, allowing them to process and learn from the most pertinent temporal features that influence electric load patterns. 
 
 \subsubsection{Holiday}
-In the field of load forecasting, temporal factors are critical in influencing consumption patterns, and understanding these can significantly enhance forecasting accuracy. Figure \ref{fig:RawData} present clear visualizations of daily electric load trends in megawatts (MW) over three distinct timeframes, each covering approximately 2.5 years from January 2012 onwards. 
+In the field of load forecasting, temporal factors are critical in influencing consumption patterns, and understanding these can significantly enhance forecasting accuracy. Figure \ref{fig:RawData} present clear visualizations of daily electric load trends in megawatts (MW) over three distinct timeframes, each covering approximately 2.5 years from January 2012 onwards. t and r stand for temperature and radiation values respectively. For visualization reasons, the daily average load was plotted. 
 \begin{figure}[!htb]
     \centering
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{ressources/Holiday/lectricLoad_holiday.jpg}
-        \caption{Raw Data Load Curve 1}
+        \caption{Load Curve 1}
         \label{fig:RawData1}
     \end{subfigure}
     \\
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{ressources/Holiday/lectricLoad_holiday(1).jpg}
-        \caption{Raw Data Load Curve 2}
+        \caption{Load Curve 2}
         \label{fig:RawData2}
     \end{subfigure}
     \\
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{ressources/Holiday/lectricLoad_holiday(2).jpg}
-        \caption{Raw Data Load Curve 3}
+        \caption{Load Curve 3}
         \label{fig:RawData3}
     \end{subfigure}
-    \caption{Raw Data of each Load Curve}
+    \caption{Load Curves}
     \label{fig:RawData}
 \end{figure}
 
@@ -246,20 +248,20 @@ For Load Curve One, no temperature or radiation data is available, requiring rel
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{ressources/Environmental/CorrelationElectricLoadFeatures.jpg}
-        \caption{Environmental Factors Load Curve 2}
+        \caption{Correlation plot of the environmental factors for Load Curve 2}
         \label{fig:Environmental2}
     \end{subfigure}
     \\
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{ressources/Environmental/CorrelationElectricLoadFeatures(1).jpg}
-        \caption{Environmental Factors Load Curve 3}
+        \caption{Correlation plot of the environmental factors for Load Curve 3}
         \label{fig:Environmental3}
     \end{subfigure}
-    \caption{Raw Data of each Load Curve}
+    \caption{Correlation plot of the environmental factors}
     \label{fig:Environmental}
 \end{figure}
-Based on these correlation plots, temperature and radiation are added as features to our models for Load Curves Two and Three, where such data is available. It's crucial to acknowledge that these features, like all others, are subject to evaluation during hyperparameter tuning. This process allows us to "switch on" or "off" particular features, determining their influence on the model's performance. Through hyperparameter tuning, we can identify the most predictive features, ensuring that only those that contribute positively to the accuracy of the forecasts are retained. 
+Based on these correlation plots, temperature and radiation are added as features to our models for Load Curves Two and Three, where such data is available. It is crucial to acknowledge that these features, like all others, are subject to evaluation during hyperparameter tuning. This process allows us to "switch on" or "off" particular features, determining their influence on the model's performance. Through hyperparameter tuning, we can identify the most predictive features, ensuring that only those that contribute positively to the accuracy of the forecasts are retained. 
 
 This flexible approach to feature inclusion ensures that our models remain adaptable and are fine-tuned to the specifics of the data they are trained on. By dynamically selecting features during the tuning process, we can build models that are both robust and sensitive to the nuances of environmental impacts on electric load, ultimately improving the precision and reliability of our load forecasting efforts. 
 
@@ -279,7 +281,7 @@ The function \texttt{get\_daylight\_phase(row)} is instrumental in our feature e
 
 This categorization captures the variation in electric load as it correlates with natural light, acknowledging that human activity, and consequently energy usage, aligns with these daily transitions. In addition to the daylight phase, the day of the week is another pivotal feature. Behavioral patterns differ significantly between weekdays and weekends, affecting energy consumption trends. This differentiation is crucial for anticipating weekly cycles in load patterns. 
 
-Figure \ref{fig:Daylight} illustrate these relationships, with varying load intensities highlighted by color gradients. Higher loads are noticeable during certain daylight phases, indicating peak consumption periods. The variation by day of the week is also apparent, with weekdays generally showing higher consumption levels compared to weekends. This visualization provides a clear indication of how both daylight phase and day of the week influence the electric load, justifying their inclusion as features in our forecasting models. 
+Figure \ref{fig:Daylight} illustrates these relationships, with varying load intensities highlighted by color gradients. Higher loads are noticeable during certain daylight phases, indicating peak consumption periods. The variation by day of the week is also apparent, with weekdays generally showing higher consumption levels compared to weekends. This visualization provides a clear indication of how both daylight phase and day of the week influence the electric load, justifying their inclusion as features in our forecasting models. 
 
 By integrating "Daylight Phase" and "Day of Week" into our models, we aim to capture the cyclical nature of electric load. The strategic inclusion of these features, grounded in the empirical evidence from our visual analysis, allows our models to adjust predictions according to the time-based patterns observed, enhancing the accuracy and reliability of our load forecasts. Feature engineering demonstrates our commitment to a data-driven understanding of consumption patterns, which is essential for developing robust predictive models in the complex arena of load forecasting. 
 
@@ -347,15 +349,63 @@ This reflection on autocorrelation not only guides our current feature engineeri
 \subsubsection{Sliding window}
 Within the framework of our feature engineering, we also employ a sliding window technique, a powerful method for capturing temporal dependencies and trends within time series data. This approach involves creating features based on the values from preceding time steps, effectively sliding a window across the data to construct a sequence of lagged observations. By systematically shifting this window and capturing the corresponding subsets of data, we create a structured representation of the time series that reflects its historical values. 
 
-The sliding window encapsulates a specified number of past time steps, allowing the model to learn from the sequence of recent loads when predicting future demand. This methodology not only captures the inherent autocorrelation observed in the plots but also provides the model with a richer set of input features that include the immediate historical context. 
+The sliding window encapsulates a specified number of past and future time steps, allowing the model to learn from the sequence of recent loads when predicting future demand. This methodology not only captures the inherent autocorrelation observed in the plots but also provides the model with a richer set of input features that include the immediate historical context. 
 
 Implementing a sliding window is particularly beneficial in situations where past load patterns are indicative of future behavior, a common characteristic in energy consumption data. It is a dynamic and adaptable technique, where the window size can be tuned to the specific periodicity and seasonality inherent in the dataset, ensuring that the generated features are optimally aligned with the forecasting objectives. 
 
-\subsection{Evaluation}
-Our methodology extends into a thorough evaluation framework, ensuring our models' robustness and accuracy in forecasting loads.
-Hyperparameter optimization is conducted using the \gls{MSE} metric, which quantifies the average of the squares of the errors or deviations. For the XGBoost model, we specifically employ the Mean Pseudo Huber Error for its training. This choice is strategic, as the Mean Pseudo Huber Error presents a smooth approximation to the Huber loss, combining the best of both the Mean Squared Error and Mean Absolute Error. This loss function is particularly adept at handling outliers, offering a balanced approach that is less sensitive to extreme deviations than \gls{MSE}, while still maintaining a quadratic form for smaller errors. Conversely, the K-Neighbours model utilizes the default “minkowski” metric, leveraging its adaptability to various data distances, crucial for capturing the complex dynamics in electricity load data. \gls{ARD} regression adheres to its default behavior, optimizing for predictive precision without specific metric alteration. For the \gls{LSTM} model, the Huber loss function is chosen for its resilience to outliers, reducing the impact of rare but large errors on the overall model performance. 
 
-Upon finalizing the training, our models are evaluated through a bespoke function, \texttt{evaluate\_model()}, which rigorously assesses model predictions against actual labels using a suite of metrics. This function calculates \gls{MSE}, \gls{RMSE}, \gls{MAE}, and the \gls{R2} for both test and, if available, validation datasets. These metrics collectively provide a nuanced view of model performance, encompassing error magnitude, prediction accuracy, and the proportion of variance explained by the model. The inclusion of variance in residuals as a logged metric offers insights into prediction consistency and reliability. 
+\subsection{Model Development and Training}
+In the subsequent sections, we detail the program flow underlying our predictive modelling efforts, which is fundamentally divided into two main stages as depicted in Figure \ref{fig.:flowChart}. This flow is designed to optimize our models for precision in electric load forecasting. 
+\begin{figure}[h]
+\begin{center}
+%\framebox[4.0in]{$\;$}
+\includegraphics[width=\textwidth]{ressources/CSOAII.drawio(1).png}
+\end{center}
+\caption{Flow chart of the program execution}
+\label{fig.:flowChart}
+\end{figure}
+
+The initial stage centers around hyperparameter optimization, where Bayesian optimization techniques are applied to fine-tune the model parameters. This process is augmented with cross-validation to ensure that the selected hyperparameters generalize well to unseen data, thereby enhancing the robustness of the models. 
+
+Following the optimization, the best-performing model parameters are utilized to conduct the final training. This definitive step is crucial as it consolidates the insights gained from the optimization process and aligns the model with the intricacies of the dataset. 
+
+The training procedure initiates with the creation of a \gls{WandB} project session. \gls{WandB} serves as an experiment tracking platform, enabling us to systematically log and monitor various metrics and configurations throughout the training process. Each training run is timestamped and recorded, facilitating the comparison of model performances and configurations over time. 
+
+The next step involves reading the dataset from a CSV file and applying a series of preprocessing operations. These operations are designed to prepare the data for training, encompassing data cleaning, feature engineering, and splitting into training, validation, and test sets. The preprocessing parameters are dynamically adjusted based on the configuration, providing the flexibility to explore various preprocessing strategies and assess their impact on model performance. Detailed descriptions of the feature generation process, including the specific strategies and techniques employed, are provided in Section \ref{subCha.:FeatureGeneration}, "Feature Generation". This section delves into the intricacies of how features are engineered and parameterized, illustrating our methodical approach to enhancing the predictive capabilities of our models. 
+
+The core of our hyperparameter tuning process employs \gls{CV}, a technique that ensures the robustness and generalizability of our models. The \gls{CV} process iterates over a predefined grid of hyperparameters, assessing each combination's performance to pinpoint the most effective configuration. Upon concluding the \gls{CV} phase, we aggregate and log the performance metrics of each fold in \gls{WandB}, providing a granular view of the model's performance across different subsets of the data. This detailed logging aids in understanding the model's consistency and the reliability of its predictive accuracy. 
+
+Hyperparameters and data preprocessing parameters are loaded from either a YAML configuration file or a \gls{WandB} sweep configuration, depending on their role in the training process. Static parameters, which remain unchanged across experiments, are specified in the YAML file. This ensures a stable base for each model training session, providing consistency and traceability for fundamental aspects of the model and preprocessing setup. Conversely, parameters subject to optimization are defined within the \gls{WandB} sweep configuration. This delineation allows for dynamic adjustment and systematic exploration of the hyperparameter space, facilitating the identification of optimal model configurations through automated sweeps. The separation of static and optimizable parameters into YAML and sweep configurations, respectively, enhances the flexibility and efficiency of our experimentation, enabling targeted optimizations that are crucial for advancing the performance of our forecasting models. 
+Following the determination of the best hyperparameters, the model is trained on the combined training and validation datasets. This final training step is crucial for leveraging the full breadth of available data, further refining the model's ability to generalize to unseen data. The training process incorporates callbacks for real-time monitoring and logging in \gls{WandB}, offering insights into the model's learning progression. 
+
+Once the training is complete, the model is saved to a specified path, and a final evaluation is conducted. This evaluation assesses the model's performance on the test dataset, utilizing metrics such as Huber loss, to quantify its predictive accuracy and error characteristics. The evaluation results are critical for understanding the model's practical applicability and forecasting prowess. 
+
+\subsection{Model Specific Characteristics}
+
+In this section, we delve into the specifics of the models employed in our study, each chosen for its unique capabilities in addressing the complexities of load forecasting. 
+
+
+\subsubsection{XGBoost}
+\Gls{xgboost} stands as a sophisticated ensemble learning algorithm renowned for its performance and speed. Our implementation leverages a series of decision trees constructed in a gradient boosting framework. Specific parameters such as "learning\_rate", "max\_depth", and "colsample\_bytree" were fine-tuned to optimize the model's ability to capture complex non-linear patterns within the load forecasting data. The use of regularization parameters, "reg\_alpha" and "reg\_lambda", was instrumental in controlling overfitting, thereby ensuring the model's robustness. Model training included an evaluation phase using a validation set, with the "WandbCallback" ensuring real-time monitoring and logging within \gls{WandB}.
+One of the key strengths of XGBoost is its flexibility in handling different types of loss functions, including Pseudo Huber loss, which is particularly useful for regression tasks. Huber loss is chosen for its robustness to outliers, as it combines the advantages of L1 loss (least absolute deviations) and L2 loss (least squares). For errors smaller than a threshold, Huber loss behaves like L2 loss, which is sensitive to small errors but gives a quadratic penalty to them. For errors larger than the threshold, it behaves like L1 loss, which is less sensitive to large errors and provides a linear penalty. This hybrid approach allows XGBoost to minimize the impact of outliers on the model's performance, leading to more accurate and reliable predictions, especially in scenarios where the data contains many outliers or is highly skewed \cite{kulisz2024optimizing}.
+
+\subsubsection{ARD}
+The \gls{ARD} Regression model is particularly notable for its capacity to determine the relevance of features within the dataset. By applying a Bayesian framework to linear regression, \gls{ARD} can effectively shrink coefficients for less relevant features to zero, simplifying the model and potentially preventing overfitting. Parameters such as "alpha\_1", "alpha\_2", "lambda\_1", and "lambda\_2" control the shape and scale of the prior distributions over the weights, influencing the model's complexity and adaptability. 
+
+
+\subsubsection{KNN}
+The \gls{KNN} is an instance-based learning model that predicts the target variable's value based on the weighted average of the k-nearest neighbors. It is inherently non-parametric and can capture complex local structures in data. The distance metric, the "leaf\_size", the power parameter for the Minkowski metric. The number of neighbors ("n\_neighbors") were key hyperparameters optimized in our study.  
+The Minkowski metric is a generalized distance metric that encompasses both Euclidean and Manhattan distances as special cases. It is defined as $(\sum_{i=1}^{n} |x_i - y_i|^p)^{1/p}$, where $x$ and $y$ are two points in an $n$-dimensional space, and $p$ is the power parameter. When $p=2$, the Minkowski metric becomes the Euclidean distance, which measures the shortest path between two points. When $p=1$, it becomes the Manhattan (or city block) distance, which measures the sum of the absolute differences of their Cartesian coordinates. The choice of $p$ allows for flexibility in how distance is calculated, influencing the behavior of the KNN algorithm. By optimizing the power parameter for the Minkowski metric in our study, we aimed to find the most suitable way to measure distances between instances, thereby improving the model's prediction accuracy \cite{bishop2006pattern}.
+
+\subsubsection{LSTM}
+The \gls{LSTM} network is applied to model time-series dependencies in load forecasting. Due to its recurrent nature, it is capable of learning from the long-term temporal sequence of the data, an essential feature given the time-series nature of load curves. Our model employs bidirectional LSTMs to capture patterns across different time scales effectively and is complemented by dropout layers to mitigate overfitting. An exponential decay learning rate schedule is utilized to fine-tune the training process dynamically. 
+For the \gls{LSTM} model, the Huber loss function is chosen for its resilience to outliers, reducing the impact of rare but large errors on the overall model performance. 
+
+\subsection{Evaluation}
+Our methodology extends into a thorough evaluation framework, ensuring our models robustness and accuracy in forecasting loads.
+Hyperparameter optimization is conducted using the \gls{MSE} metric, which quantifies the average of the squares of the errors or deviations. 
+
+Upon finalizing the training, our models are evaluated through a bespoke function, \texttt{evaluate\_model()}, which assesses model predictions against actual labels using a suite of metrics. This function calculates \gls{MSE}, \gls{RMSE}, \gls{MAE}, and the \gls{R2} for both test and, if available, validation datasets. These metrics collectively provide a nuanced view of model performance, encompassing error magnitude, prediction accuracy, and the proportion of variance explained by the model. The inclusion of variance in residuals as a logged metric offers insights into prediction consistency and reliability. 
 
 Crucially, our evaluation process is integrated with \gls{WandB}, allowing us to log all metrics and training parameters. This not only facilitates real-time monitoring and comparison of model performance but also ensures the reproducibility of our results. Through \gls{WandB}, stakeholders can easily trace the experimental setups leading to the reported outcomes, fostering transparency and facilitating future research endeavors. 
 
@@ -374,50 +424,81 @@ In the results section of this study, we systematically evaluate the performance
 \subsubsection{Analysis of Bayesian Hyperparameter Optimization for XGBoost}
 This section presents an analysis of the Bayesian hyperparameter optimization process for the XGBoost algorithm, focusing on Load Curves 1, 2, and 3. We discuss the trends and implications of the cross-validation Mean Squared Error (\texttt{MSE\_CV}) across 30 evaluation runs.
 
-For Load Curve 1, the optimization process showed an initial decrease in \texttt{MSE\_CV}, indicating rapid improvements in model configuration. After the initial gains, the reduction in \texttt{MSE\_CV} continued at a slower pace, suggesting that the optimization was approaching an optimal set of hyperparameters. The lowest \texttt{MSE\_CV} achieved offers an indication of the model's capability to generalize well to unseen data when using the most favorable hyperparameters discovered during the optimization, with the lowest \texttt{MSE\_CV} being 65.728.
-
+For Load Curve 1, the optimization process showed an initial decrease in \texttt{MSE\_CV}, indicating rapid improvements in model configuration, shown in Figure \ref{fig:xgboost_lc1}. Each point reflects the result of a run. The average mse of the cross validation is plotted on the y axis. The light blue line is the smallest MSE\_cv at the time. This description applies to all MSE\_cv. Trend plots. After the initial gains, the reduction in \texttt{MSE\_CV} continued at a slower pace, suggesting that the optimization was approaching an optimal set of hyperparameters. The lowest \texttt{MSE\_CV} achieved offers an indication of the model's capability to generalize well to unseen data when using the most favorable hyperparameters discovered during the optimization, with the lowest \texttt{MSE\_CV} being 65.728.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/Hyperparams/XGBoost/XGBoost MSE Trends for Load Curve 1 Hyperparameter Optimization Insights(1).png}
+    \caption{Bayesian hyperparameter optimization trends for XGBoost on Load Curve 1.}
+    \label{fig:xgboost_lc1}
+\end{figure}
 The most negatively correlated parameter with the target variable is \texttt{max\_depth}, suggesting that deeper trees tend to reduce error, likely due to a better capture of complex patterns. Conversely, \texttt{subsample} shows a positive correlation, indicating that higher subsample rates may benefit the model performance, likely due to reduced overfitting. The \texttt{load\_lag} also has a notable positive correlation, implying that past values are significant predictors.
 
 In the best configurations, parameters like \texttt{max\_depth} at 10, \texttt{subsample} at 0.3036, and \texttt{reg\_alpha} at 0.7148 align with the correlations observed, indicating a tuned balance between model complexity and generalization.
 
 
-The \texttt{MSE\_CV} trend for Load Curve 2 indicates a more gradual decline, with occasional increases, reflecting the exploration-exploitation trade-off inherent in Bayesian optimization. The variability in \texttt{MSE\_CV} values at certain points implies that certain hyperparameter combinations were less effective, demonstrating the process's stochastic nature. Nonetheless, the general downward trend highlights the overall effectiveness of the optimization over successive runs, resulting in a stable \texttt{MSE\_CV} value of approximately 1 with a lowest value of 0.4937.
+The \texttt{MSE\_CV} trend for Load Curve 2 indicates a more gradual decline, with occasional increases, reflecting the exploration-exploitation trade-off inherent in Bayesian optimization. This is illustrated in Figure \ref{fig:xgboost_lc2}. The variability in \texttt{MSE\_CV} values at certain points implies that certain hyperparameter combinations were less effective, demonstrating the process's stochastic nature. Nonetheless, the general downward trend highlights the overall effectiveness of the optimization over successive runs, resulting in a stable \texttt{MSE\_CV} value of approximately 1 with a lowest value of 0.4937.
 
 The \texttt{max\_depth} stands out with the highest negative correlation of -0.9199, which is in line with the need to control model complexity. The \texttt{load\_lag} at 0.4917 suggests the importance of historical load values, while \texttt{reg\_lambda} with a correlation of 0.3752 shows the effect of L2 regularization in controlling the model complexity. The negative correlation of \texttt{subsample} at -0.4868 further supports the model's need for randomness to improve performance.
 
 Load Curve 2's best configuration also reflects a depth of 10, with \texttt{subsample} close to 1 and \texttt{reg\_alpha} at 0.7426, suggesting a model that leverages almost the full dataset with regularization to maintain robustness.
-
-The \texttt{MSE\_CV} for Load Curve 3 depicts a rapid initial improvement, which then stabilizes. The low variability in subsequent \texttt{MSE\_CV} values suggests that the optimization process quickly found a stable set of hyperparameters that consistently yielded low error rates across the cross-validation folds. The lowest \texttt{MSE\_CV} is 2,261.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/Hyperparams/XGBoost/XGBoost MSE Trends for Load Curve 2 Hyperparameter Optimization Insights.png}
+    \caption{Bayesian hyperparameter optimization trends for XGBoost on Load Curve 2.}
+    \label{fig:xgboost_lc2}
+\end{figure}
+The \texttt{MSE\_CV} for Load Curve 3 depicts a rapid initial improvement, which then stabilizes. This is shown in Figure \ref{fig:xgboost_lc3}. The low variability in subsequent \texttt{MSE\_CV} values suggests that the optimization process quickly found a stable set of hyperparameters that consistently yielded low error rates across the cross-validation folds. The lowest \texttt{MSE\_CV} is 2,261.
 
 Similarly, \texttt{max\_depth} has a strong negative correlation of -0.9231, emphasizing careful calibration to avoid overfitting. The \texttt{subsample} value has a substantial negative correlation of -0.7001, again highlighting the need for introducing stochasticity into the model training process. The \texttt{min\_child\_weight} at -0.4994 and \texttt{reg\_lambda} at -0.5178 show the influence of regularization parameters on model performance, with both pointing towards the importance of penalizing model complexity to enhance predictive performance.
 
 For Load Curve 3, the best configuration with \texttt{max\_depth} at 10, \texttt{subsample} at 0.6251, and \texttt{reg\_alpha} at 2.7372 confirms the importance of these parameters in achieving optimal forecasting performance.
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/Hyperparams/XGBoost/XGBoost MSE Trends for Load Curve 3 Hyperparameter Optimization Insights.png }
+    \caption{Bayesian hyperparameter optimization trends for XGBoost on Load Curve 3.}
+    \label{fig:xgboost_lc3}
+\end{figure}
 \subsubsection{Feature importance}
 
 The feature importance plots from XGBoost for three different load curves provide insights into the logical parameters the model deems significant for prediction accuracy:
 
-For Load Curve 1 (Figure~\ref{fig:load_curve_1}), the model gives overwhelming importance to features related to time, such as \texttt{holiday}, indicating a strong seasonal trend in the load data. The \texttt{electricLoad\_rolling\_avg\_1} is also a key feature, showing that recent load history plays a crucial role in forecasting.
+For Load Curve 1 (Figure~\ref{fig:feature_importance_1}), the model gives overwhelming importance to features related to time, such as \texttt{holiday}, indicating a strong seasonal trend in the load data. The \texttt{electricLoad\_rolling\_avg\_1} is also a key feature, showing that recent load history plays a crucial role in forecasting.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/FeatureImportance/Feature Importance 1.png}
+    \caption{Feature Importance for Load Curve 1.}
+    \label{fig:feature_importance_1}
+\end{figure}
+In the case of Load Curve 2 (Figure~\ref{fig:feature_importance_2}), features such as \texttt{avg\_t1\_day} and \texttt{avg\_t1\_month} stand out, suggesting that average load values over time frames are valuable predictors. This aligns with logical expectations, as load forecasting would naturally rely on past consumption patterns to predict future trends. The \texttt{electricLoad\_rolling\_avg\_2} is the most important feature, showing that recent load history plays a crucial role in forecasting.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/FeatureImportance/Feature Importance 2.png}
+    \caption{Feature Importance for Load Curve 2.}
+    \label{fig:feature_importance_2}
+\end{figure}
+The feature importance analysis for XGBoost applied to Load Curve 3 unveils significant insights into the predictive drivers of the model (see Figure \ref{fig:feature_importance_3}). 
+It is apparent that rolling averages, specifically `electricLoad\_rolling\_avg\_2` (rolling average from last 2 load values), have the highest importance scores. This denotes the model's reliance on short-term historical load values to predict future loads, emphasizing the significance of recent trends over distant past observations. 
+A pronounced seasonal effect was identified, corroborated by autocorrelation plots that delineated clear periodic patterns in the data. This could explain the Feature Importance to temporal variables like Holiday and startDate\_hour.
 
-In the case of Load Curve 2 (Figure~\ref{fig:load_curve_2}), features such as \texttt{avg\_t1\_day} and \texttt{avg\_t1\_month} stand out, suggesting that average load values over time frames are valuable predictors. This aligns with logical expectations, as load forecasting would naturally rely on past consumption patterns to predict future trends. The \texttt{electricLoad\_rolling\_avg\_2} is the most important feature, showing that recent load history plays a crucial role in forecasting.
-
-For Load Curve 3 (Figure~\ref{fig:load_curve_3}), \texttt{dayofweek} and \texttt{holiday} emerge as the top features, further supporting the idea that both short-term and long-term historical load data are pivotal in forecasting. \texttt{StartDate\_hour} plays also an important role.
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/FeatureImportance/Feature Importance 3.png}
+    \caption{Feature Importance for Load Curve 3.}
+    \label{fig:feature_importance_3}
+\end{figure}
 Across all three curves, the prominence of features directly related to time and historical load patterns reaffirms that XGBoost is focusing on logical and interpretable parameters for load forecasting. This emphasis on temporally relevant features is consistent with domain knowledge in energy demand forecasting, where such factors are known to be influential.
 
 \subsubsection{Final Model Results for XGBoost}
 The XGBoost algorithm's efficacy was evaluated across three distinct load curves. The model's performance was quantitatively assessed using \gls{MSE}, \gls{MAE}, and the \gls{R2} metric, which together paint a comprehensive picture of its predictive accuracy and reliability.
 
-\textbf{Load Curve 1}
 The XGBoost model achieved an \gls{MSE} of 83.072, an \gls{MAE} of 6.463, and an impressive $R^2$ of 0.9925 on Load Curve 1. The high \gls{R2} value indicates that the model explains almost all the variability in the load data. The corresponding residual plot shows a normal distribution of errors centered around zero, signifying precise predictions with no apparent bias.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{ressources/residuals/erg/lc1/residuals.jpg}
+\includegraphics[width=0.8\textwidth]{ressources/residuals/erg/lc1/residuals.jpeg}
 \caption{Histogram of residuals for Load Curve 1 on the test set, indicating a well-fitted model with symmetrically distributed errors and a a sharp peak around zero.}
 \label{fig:residuals_curve1}
 \end{figure}
 
-\textbf{Load Curve 2}
 For Load Curve 2, the model delivered an \gls{MSE} of 1.708, an \gls{MAE} of 1.040, and an \gls{R2} of 0.9879. The outstandingly low \gls{MSE} and \gls{MAE} values suggest that the model's predictions were very close to the actual loads, reflecting high precision and accuracy. The volume of data for Load Curve 2 was the highest, which may have contributed to the model's exceptional performance.
 \begin{figure}[H]
 \centering
@@ -426,9 +507,7 @@ For Load Curve 2, the model delivered an \gls{MSE} of 1.708, an \gls{MAE} of 1.0
 \label{fig:residuals_curve2}
 \end{figure}
 
-\textbf{Load Curve 3}
 Lastly, on Load Curve 3, the model secured an \gls{MSE} of 3.855, an \gls{MAE} of 1.585, and an \gls{R2} of 0.9942. Despite the lower volume of data compared to Load Curve 2, the model still managed to achieve remarkable precision, as evidenced by the high \gls{R2} value. The residuals' distribution reflects a tight clustering around zero, indicating the model's consistent performance.
-Across all three load curves, XGBoost has demonstrated superior predictive performance, outperforming other models tested in the study. The residual plots affirm this finding, showing a tight concentration of errors around zero and no signs of patterns or bias, which could indicate underfitting or overfitting. This suggests that the XGBoost model is robust and generalizes well to unseen data, making it an excellent choice for load forecasting applications. Furthermore, the absence of significant outliers in residuals for Load Curve 1 confirms the model's resilience to extreme values and its capacity to handle different data distributions effectively.
 
 
 \begin{figure}[H]
@@ -438,7 +517,8 @@ Across all three load curves, XGBoost has demonstrated superior predictive perfo
 \label{fig:residuals_curve3}
 \end{figure}
 
-To assess the model's performance, an in-depth analysis of the residual distributions for each load curve was undertaken. The residuals for Load Curve 1 were found to be symmetrically distributed about zero, which is indicative of an unbiased model, as illustrated in Figure \ref{fig:residuals_curve1}. Similar observations were made for Load Curve 2, as depicted in Figure \ref{fig:residuals_curve2}. Meanwhile, Load Curve 3 displayed a slight skew towards negative residuals, as evident in Figure \ref{fig:residuals_curve3}. Across all figures, the residuals closely approximate a normal distribution. This observation lends support to the assumption of normally distributed residuals, further validating the robustness of the model's predictive capacity.
+To assess the model's performance, an in-depth analysis of the residual distributions for each load curve was undertaken. The residuals for Load Curve 1 were found to be symmetrically distributed about zero, which is indicative of an unbiased model, as illustrated in Figure \ref{fig:residuals_curve1}. 
+Meanwhile, Load Curve 2 displayed a slight skew towards negative bias, as evident in Figure \ref{fig:residuals_curve2}. Similar observations were made for Load Curve 3, as depicted in Figure \ref{fig:residuals_curve3}. Across all figures, the residuals closely approximate a normal distribution. This observation lends support to the assumption of normally distributed residuals, further validating the robustness of the model's predictive capacity.
 
 
 
@@ -447,15 +527,34 @@ To assess the model's performance, an in-depth analysis of the residual distribu
 The analysis of hyperparameter optimization plots for an \gls{ARD} model across three distinct load curves reveals varied trends and characteristics. The \gls{MSE} serves as the chosen metric, with each point on the plots representing a model run with a specific set of hyperparameters. 
 
 
-For Load Curve 1, \gls{MSE} trends stabilize after initial fluctuations, as evidenced in Figure \ref{ardHyper1}, suggesting robustness against hyperparameter variation within certain limits. The attainment of the lowest MSE early in the process indicates an optimal hyperparameter configuration was rapidly found, with subsequent runs showing consistent results, hinting at either the model's limitations or the efficacy of ARD's regularization.
-
-The optimization narrative for Load Curve 2, depicted in Figure \ref{ardHyper2}, reveals a tighter \gls{MSE} range, implying a more precise model predictability. Variations in \gls{MSE} values across runs indicate sensitivity to specific hyperparameters, suggesting that focused tuning could yield substantial performance gains.
-
-For Load Curve 3, Figure \ref{ardHyper3} shows greater \gls{MSE} variance across runs, with a notable decrease at run 18, possibly signifying a highly effective hyperparameter set. However, such a pronounced drop necessitates further examination to rule out overfitting, which will be addressed in the final model evaluation.
-
+For Load Curve 1, \gls{MSE} trends stabilize after initial fluctuations, as evidenced in Figure \ref{fig:ard_lc1}, suggesting robustness against hyperparameter variation within certain limits. The attainment of the lowest MSE early in the process indicates an optimal hyperparameter configuration was rapidly found, with subsequent runs showing consistent results, hinting at either the model's limitations or the efficacy of ARD's regularization.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/Hyperparams/ard/ARD MSE Trends for Load Curve 1 Hyperparameter Optimization Insights.png}
+    \caption{Bayesian hyperparameter optimization trends for ARD on Load Curve 1.}
+    \label{fig:ard_lc1}
+\end{figure}
+The optimization narrative for Load Curve 2, depicted in Figure \ref{fig:ard_lc2}, reveals a tighter \gls{MSE} range, implying its more robust to hyperparameter. Variations in \gls{MSE} values across runs indicate sensitivity to specific hyperparameters, suggesting that focused tuning could yield substantial performance gains.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/Hyperparams/ard/ARD MSE Trends for Load Curve 2 Hyperparameter Optimization Insights.png}
+    \caption{Bayesian hyperparameter optimization trends for ARD on Load Curve 2.}
+    \label{fig:ard_lc2}
+\end{figure}
+For Load Curve 3, Figure \ref{fig:ard_lc3} shows greater \gls{MSE} variance across runs, with a notable decrease at run 18, possibly signifying a highly effective hyperparameter set. However, such a pronounced drop necessitates further examination to rule out overfitting, which will be addressed in the final model evaluation.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{ressources/Hyperparams/ard/ARD MSE Trends for Load Curve 3 Hyperparameter Optimization Insights.png}
+    \caption{Bayesian hyperparameter optimization trends for ARD on Load Curve 3.}
+    \label{fig:ard_lc3}
+\end{figure}
 Optimal hyperparameter configurations identified through cross-validation are distinct for each load curve. For Load Curve 1, key parameters include a low tolerance and minimal penalization for model complexity, with both score computation and daytime index factored in, highlighting their predictive importance. Load Curve 2's best setup reflects the significance of long-term historical data, with fewer shifts but a high load lag, and does not include a day of the week index, which could speak to the dataset's unique temporal dynamics. Conversely, Load Curve 3's configuration employs an extensive number of iterations, incorporates negative shifts, and utilizes both daytime and day of the week indices, underscoring their contribution to forecasting accuracy.
 
 These tailored hyperparameter settings across different load curves demonstrate the necessity of specific optimization strategies for each forecasting task, ensuring the \gls{ARD} model's generalizability and resistance to overfitting while maximizing predictive accuracy.
+
+\subsubsection{Final Model Results for ARD}
+
+The \acrshort{ARD} regression model's performance on the test datasets revealed an \acrshort{R2} of 0.986 for \acrshort{LC1}, indicating that the model explains most of the variance. The \acrshort{MAE} and \acrshort{MSE} were at high values of 8.918 and 149.164  respectively. For \acrshort{LC2}, the model achieved an \acrshort{R2} of 0.802, with a corresponding \acrshort{MAE} of 4.230 and \acrshort{MSE} of 27.752 , reflecting a decent fit of the model to the data. \acrshort{LC3} recorded an \acrshort{R2} of 0.959, suggesting a strong explanatory power, with \acrshort{MAE} and \acrshort{MSE} values of 4.006 and 26.958, respectively, which indicates a consistent model performance across different datasets. In general, the model reproduces the underlying patterns but is still characterized by high errors
 
 
 \subsection{KNN}
@@ -463,7 +562,7 @@ These tailored hyperparameter settings across different load curves demonstrate 
 
 The Bayesian hyperparameter optimization for the \gls{KNN} model applied to Load Curve 1 demonstrates a nuanced exploration of the parameter space. The minimum \gls{MSE} achieved was 82.759, indicative of the model's predictive capacity when optimized for this particular load curve. Notably, the parameter `load\_lag`, with a value of 1, exhibited a significant positive correlation (0.975) with the model performance, suggesting that recent historical load data is highly predictive of future values. On the contrary, `neg\_shifts`, with a value of -2, showed a notable negative correlation (-0.527), pointing to its detraction from model accuracy.
 
-The best configuration for the \gls{KNN} model, which includes `algorithm` set to "ball\_tree", `leaf\_size` of 65, and `n\_neighbors` of 100, also highlights the `enable\_daytime\_index` parameter set to true. This may underline the temporal dynamics characteristic of this particular dataset where certain hours of the day are more informative. Meanwhile, the distance metric power parameter `p` was set to 2, aligning with the Euclidean distance, which could suggest a geometrically simpler structure in the data. 
+The best configuration for the \gls{KNN} model, which includes `algorithm` set to "ball\_tree", `leaf\_size` of 65, and `n\_neighbors` of 100. Furthermore the `enable\_daytime\_index` parameter is set to true. Meanwhile, the distance metric power parameter `p` was set to 2, consistent with the Euclidean distance as derived from the Minkowski distance metric, indicating a geometrically simpler structure in the data.
 
 Considering these hyperparameter settings, it is evident that the model relies on a mix of immediate historical data and more global data properties, balancing local versus general trends in the dataset. The Bayesian approach allows for an efficient and directed search through the hyperparameter space, honing in on the most promising configurations that yield the lowest \gls{MSE} values.
 
@@ -557,9 +656,13 @@ The \gls{LSTM} models showcased a spectrum of performance across the evaluated l
 These results show that \gls{LSTM} is not suitable for load prediction in this context.
 
 
-\subsection{Comparative Analysis of Predictive Performance Across all Models}
 
-\begin{table}[ht]
+The \subsection{Comparative Analysis of Predictive Performance Across all Models} section aims to juxtapose the predictive proficiencies of the four machine learning models. Each was appraised on three distinct load curves, \gls{LC1}, \gls{LC2}, and \gls{LC3}, to discern their predictive power and reliability across different data characteristics and volumes. The performance was quantified using standard evaluation metrics: Mean Squared Error (\gls{MSE}), Mean Absolute Error (\gls{MAE}), and the Coefficient of Determination (\gls{R2}).The results are listed in Table \ref{tab:model_performance}.
+
+\gls{xgboost} emerged as the preeminent model, consistently registering the lowest \gls{MSE} and \gls{MAE} across all load curves, along with the highest \gls{R2} scores. Its robustness and adaptability to the dataset nuances were evident, confirming its preliminary promise. \gls{ARD} followed suit, although with a discernible gap in performance metrics, suggesting a decent but not exceptional prediction capacity compared to \gls{xgboost}. \gls{KNN}, while effective to a certain extent, lagged in predictive accuracy, particularly for \gls{LC3}, reflecting possible limitations in handling more complex datasets. The \gls{LSTM} network, often favored in time-series forecasting, surprisingly underperformed across all metrics, with high \gls{MSE} and \gls{MAE}, and subpar \gls{R2} scores, indicating a mismatch between the model's capabilities and the data's predictive demands.
+
+The variance in the performance of the models underscores the criticality of selecting a model aligned with the data's inherent structure and complexity. \glspl{xgboost} supremacy suggests that for this specific dataset, gradient boosting methods may be more adept at capturing intricate patterns than their deep learning or instance-based counterparts. The findings from this comparative analysis will aid in steering future predictive endeavors and algorithm selections for similar load forecasting tasks.
+\begin{table}[h]
 \centering
 \caption{Comparison of Model Performance Metrics Across Load Curves}
 \label{tab:model_performance}
@@ -603,8 +706,7 @@ Focusing on \gls{xgboost}, we expanded feature sets significantly. Bayesian hype
 Future research could address the topic of making our model more robust with methods such as stacking or boosting in combination with \gls{xgboost}. Adding sensors to capture more real-time operational data could further enhance the accuracy and timeliness of the load curve predictions. Explainable AI techniques could give further insights into the decision-making process of our model.
 
 \subsubsection*{Acknowledgments}
-Use unnumbered third level headings for the acknowledgments. All
-acknowledgments, including those to funding agencies, go at the end of the paper.
+We would like to thank Siemens AG for their cooperation in this research project. Their willingness to provide us with the necessary load data was of decisive importance for the progress of our project.
 
 
 \bibliography{iclr2021_conference}
